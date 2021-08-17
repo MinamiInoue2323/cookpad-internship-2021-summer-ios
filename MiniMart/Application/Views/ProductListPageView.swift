@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductListPageView: View {
+    @EnvironmentObject var cartState: CartState
     @State var products: [FetchProductsQuery.Data.Product] = []
     @State var isCartViewPresented: Bool = false
     var body: some View {
@@ -48,10 +49,11 @@ struct ProductListPageView: View {
                 Button(action: {self.isCartViewPresented = true}){
                     Image(systemName: "folder")
                 }
+                Text("\(cartState.totalProductCounts)")
             }
         }.sheet(isPresented: $isCartViewPresented){
             NavigationView{
-                CartPageView()
+                CartPageView(isCartViewPresented: $isCartViewPresented)
             }
         }
     }

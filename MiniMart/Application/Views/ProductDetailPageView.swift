@@ -21,28 +21,24 @@ struct ProductDetailPageView: View {
                 Text(product.summary)
                 Spacer()
                 Button(action: {
-                    cartState.products.append(product)
+                    cartState.add(product:product)
                     
                 }){
                     Text("カートに追加").frame(maxWidth: .infinity,maxHeight: 60).background(Color.orange).foregroundColor(Color.white).cornerRadius(10)
                 }
             }.padding(.horizontal, 9)
-
-            
-            
-
-                            
+        
         }
         .toolbar{
             ToolbarItemGroup(placement: .navigationBarTrailing){
                 Button(action: {self.isCartViewPresented = true}){
                     Image(systemName: "folder")
                 }
-                Text("\(cartState.products.count)")
+                Text("\(cartState.totalProductCounts)")
             }
         }.sheet(isPresented: $isCartViewPresented){
             NavigationView{
-                CartPageView()
+                CartPageView( isCartViewPresented: $isCartViewPresented)
             }
         }.navigationBarTitleDisplayMode(.inline)
         
