@@ -7,10 +7,47 @@
 import SwiftUI
 import Foundation
 
+
 struct ProductDetailPageView: View {
+    @EnvironmentObject var cartState: CartState
     var product: FetchProductsQuery.Data.Product
+    @State var isCartViewPresented: Bool = false
     var body: some View {
-        Text("Hello World").navigationTitle(product.name)
+        VStack(alignment: .leading){
+            RemoteImage(urlString: product.imageUrl).frame(height:300)
+            VStack(alignment: .leading){
+                Text(product.name).font(.title)
+                Text("\(product.price)円").font(.title2).padding(.vertical, 8)
+                Text(product.summary)
+                Spacer()
+                Button(action: {
+                    cartState.products.append(product)
+                    
+                }){
+                    Text("カートに追加").frame(maxWidth: .infinity,maxHeight: 60).background(Color.orange).foregroundColor(Color.white).cornerRadius(10)
+                }
+            }.padding(.horizontal, 9)
+
+            
+            
+
+                            
+        }
+        .toolbar{
+            ToolbarItemGroup(placement: .navigationBarTrailing){
+                Button(action: {self.isCartViewPresented = true}){
+                    Image(systemName: "folder")
+                }
+                Text("\(cartState.products.count)")
+            }
+        }.sheet(isPresented: $isCartViewPresented){
+            NavigationView{
+                CartPageView()
+            }
+        }.navigationBarTitleDisplayMode(.inline)
+        
+        
+        
     }
 }
 
@@ -26,6 +63,6 @@ struct ProductDetailPageView_Previews: PreviewProvider {
                     imageUrl: "https://image.mini-mart.com/dummy/1"
                 )
             )
-        }
+        }.environmentObject(CartState())
     }
 }
